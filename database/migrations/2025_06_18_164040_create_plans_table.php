@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data', function (Blueprint $table) {
+        Schema::create('plans', function (Blueprint $table) {
             $table->id();
-            $table->float('value');
-            $table->foreignId('sensor_id')->constrained('sensors')->onDelete('cascade');
+            $table->string('name');
+            $table->float('price');
+            $table->dateTime('duration');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data');
+        Schema::dropIfExists('plans');
     }
 };

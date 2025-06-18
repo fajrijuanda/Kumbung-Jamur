@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('actuators', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sensor_id')
-                ->constrained('sensors')
-                ->onDelete('cascade');
+            $table->foreignId('sensor_id')->constrained('sensors')->onDelete('cascade');
             $table->timestamps();
         });
     }

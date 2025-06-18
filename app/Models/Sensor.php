@@ -29,12 +29,12 @@ class Sensor extends Model
         return $this->belongsTo(Kumbung::class);
     }
 
-    public function data(): HasMany
+    public function datas(): HasMany
     {
         return $this->hasMany(Data::class);
     }
 
-    public function actuator(): HasMany
+    public function actuators(): HasMany
     {
         return $this->hasMany(Actuator::class);
     }

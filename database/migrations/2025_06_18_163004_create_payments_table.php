@@ -11,14 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sensors', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('topic');
-            $table->string('unit');
-            $table->text('description')->nullable();
-            $table->string('location');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('kumbung_id')->constrained('kumbungs')->onDelete('cascade');
+            $table->float('amount');
+            $table->enum('method', [
+                'CREDIT_CARD',
+                'BANK_TRANSFER',
+                'E_WALLET'
+            ]);
+            $table->enum('status', [
+                'PENDING',
+                'SUCCESS',
+                'FAILED'
+            ]);
             $table->timestamps();
         });
     }
@@ -28,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sensors');
+        Schema::dropIfExists('payments');
     }
 };

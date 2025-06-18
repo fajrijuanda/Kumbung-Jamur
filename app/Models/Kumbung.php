@@ -29,4 +29,9 @@ class Kumbung extends Model
     {
         return $this->hasMany(Sensor::class);
     }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->string('image')->nullable();
+            $table->enum('role', ['ADMIN', 'USER'])->default('USER');
             $table->timestamps();
         });
 

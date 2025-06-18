@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data', function (Blueprint $table) {
+        Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->float('value');
-            $table->foreignId('sensor_id')->constrained('sensors')->onDelete('cascade');
+            $table->foreignId('actuator_id')->constrained('actuators')->onDelete('cascade');
+            $table->enum('activity', [
+                'ON',
+                'OFF',
+                'FADE_IN',
+                'FADE_OUT',
+                'BRIGHTNESS_UP',
+                'BRIGHTNESS_DOWN'
+            ]);
             $table->timestamps();
         });
     }
@@ -24,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data');
+        Schema::dropIfExists('activities');
     }
 };
