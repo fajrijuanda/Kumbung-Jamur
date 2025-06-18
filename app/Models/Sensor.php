@@ -33,4 +33,9 @@ class Sensor extends Model
     {
         return $this->hasMany(Data::class);
     }
+
+    public function actuator(): HasMany
+    {
+        return $this->hasMany(Actuator::class);
+    }
 }
