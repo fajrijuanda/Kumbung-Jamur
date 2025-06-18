@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\laravel_example\UserManagement;
 use App\Http\Controllers\dashboard\Analytics;
@@ -63,6 +64,7 @@ use App\Http\Controllers\apps\UserViewNotifications;
 use App\Http\Controllers\apps\UserViewConnections;
 use App\Http\Controllers\apps\AccessRoles;
 use App\Http\Controllers\apps\AccessPermission;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\pages\UserProfile;
 use App\Http\Controllers\pages\UserTeams;
 use App\Http\Controllers\pages\UserProjects;
@@ -157,7 +159,12 @@ use App\Http\Controllers\tables\DatatableAdvanced;
 use App\Http\Controllers\tables\DatatableExtensions;
 use App\Http\Controllers\charts\ApexCharts;
 use App\Http\Controllers\charts\ChartJs;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\maps\Leaflet;
+use App\Http\Middleware\IsAdminMiddleware;
+use App\Http\Middleware\IsLoginMiddleware;
+use App\Http\Middleware\IsNotLoginMiddleware;
+use App\Http\Middleware\IsUserMiddleware;
 
 // Main Page Route
 Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -357,3 +364,42 @@ Route::get('/maps/leaflet', [Leaflet::class, 'index'])->name('maps-leaflet');
 // laravel example
 Route::get('/laravel/user-management', [UserManagement::class, 'UserManagement'])->name('laravel-example-user-management');
 Route::resource('/user-list', UserManagement::class);
+
+// ================= Custom routes ==========================
+
+// Is Login Middleware
+Route::middleware([IsLoginMiddleware::class])->group(function () {
+    // Home
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+});
+
+// Admin Middleware
+Route::middleware([IsLoginMiddleware::class, IsAdminMiddleware::class])->group(function () {
+    //
+});
+
+// User Middleware
+Route::middleware([IsLoginMiddleware::class, IsUserMiddleware::class])->group(function () {
+    //
+});
+
+// Not Login Middleware
+Route::middleware([IsNotLoginMiddleware::class])->group(function () {
+    // Auth
+    Route::prefix('/auth')->group(function () {
+        // Login
+        Route::get('/login', [AuthController::class, 'viewLogin'])->name('auth.login');
+        Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+
+        // Forgot Password
+        Route::get('/forgot-password', [AuthController::class, 'viewForgotPassword'])->name('auth.forgot-password');
+        Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('auth.forgot-password');
+
+        // Reset Password
+        Route::get('/reset-password', [AuthController::class, 'viewResetPassword'])->name('auth.reset-password');
+        Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('auth.reset-password');
+    });
+});
+
+// Logout
+Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
