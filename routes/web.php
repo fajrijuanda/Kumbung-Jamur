@@ -158,9 +158,58 @@ use App\Http\Controllers\tables\DatatableExtensions;
 use App\Http\Controllers\charts\ApexCharts;
 use App\Http\Controllers\charts\ChartJs;
 use App\Http\Controllers\maps\Leaflet;
+use App\Http\Controllers\auth\Login;
+use App\Http\Controllers\auth\Register;
+use App\Http\Controllers\auth\ForgotPassword;
+use App\Http\Controllers\admin\dashboard\AdminDashboard;
+use App\Http\Controllers\user\dashboard\UserDashboard;
 
 // Main Page Route
-Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+// Middleware 'guest' untuk user yang belum login
+Route::middleware('guest')->group(function () {
+    // --- LOGIN ---
+    // GET /login akan ditangani oleh method index() di controller Login
+    Route::get('/login', [Login::class, 'index'])->name('login');
+    Route::post('/login', [Login::class, 'login'])->name('login.post');
+
+    // --- REGISTER ---
+    // GET /register akan ditangani oleh method index() di controller Register
+    Route::get('/register', [Register::class, 'index'])->name('register');
+    // POST /register akan ditangani oleh method store()
+    Route::post('/register', [Register::class, 'store'])->name('register.store');
+
+    Route::get('/forgot-password', [ForgotPassword::class, 'index'])->name('password.request');
+
+    // Mengirim link reset password ke email
+    Route::post('/forgot-password', [ForgotPassword::class, 'sendResetLink'])->name('password.email');
+
+    // --- RESET PASSWORD ---
+    // Menampilkan form untuk mereset password (dari link di email)
+    Route::get('/reset-password/{token}', [ForgotPassword::class, 'showResetForm'])->name('password.reset');
+
+    // Menyimpan password yang baru
+    Route::post('/reset-password', [ForgotPassword::class, 'resetPassword'])->name('password.update');
+
+});
+
+// Middleware 'auth' untuk user yang sudah login
+Route::middleware('auth')->group(function () {
+    // Route Logout
+    Route::post('/logout', [Login::class, 'logout'])->name('logout');
+
+    // Dashboard untuk User Biasa
+    Route::get('/dashboard', [UserDashboard::class, 'index'])->name('dashboard');
+
+    // Grup untuk Admin
+    Route::prefix('admin')->name('admin.')->group(function () {
+        // Anda bisa tambahkan middleware cek role admin di sini jika perlu: ->middleware('isAdmin')
+        Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+    });
+});
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
 // locale
@@ -170,8 +219,8 @@ Route::get('/lang/{locale}', [LanguageController::class, 'swap']);
 Route::get('/layouts/collapsed-menu', [CollapsedMenu::class, 'index'])->name('layouts-collapsed-menu');
 Route::get('/layouts/content-navbar', [ContentNavbar::class, 'index'])->name('layouts-content-navbar');
 Route::get('/layouts/content-nav-sidebar', [ContentNavSidebar::class, 'index'])->name('layouts-content-nav-sidebar');
-Route::get('/layouts/navbar-full', [NavbarFull::class, 'index'])->name('layouts-navbar-full');
-Route::get('/layouts/navbar-full-sidebar', [NavbarFullSidebar::class, 'index'])->name('layouts-navbar-full-sidebar');
+// Route::get('/layouts/navbar-full', [NavbarFull::class, 'index'])->name('layouts-navbar-full');
+// Route::get('/layouts/navbar-full-sidebar', [NavbarFullSidebar::class, 'index'])->name('layouts-navbar-full-sidebar');
 Route::get('/layouts/horizontal', [Horizontal::class, 'index'])->name('dashboard-analytics');
 Route::get('/layouts/vertical', [Vertical::class, 'index'])->name('dashboard-analytics');
 Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');
@@ -276,7 +325,7 @@ Route::get('/cards/basic', [CardBasic::class, 'index'])->name('cards-basic');
 Route::get('/cards/advance', [CardAdvance::class, 'index'])->name('cards-advance');
 Route::get('/cards/statistics', [CardStatistics::class, 'index'])->name('cards-statistics');
 Route::get('/cards/analytics', [CardAnalytics::class, 'index'])->name('cards-analytics');
-Route::get('/cards/gamifications', [CardGamifications::class, 'index'])->name('cards-gamifications');
+// Route::get('/cards/gamifications', [CardGamifications::class, 'index'])->name('cards-gamifications');
 Route::get('/cards/actions', [CardActions::class, 'index'])->name('cards-actions');
 
 // User Interface
