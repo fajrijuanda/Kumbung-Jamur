@@ -3,285 +3,183 @@
 @section('title', 'Apex - Charts')
 
 @section('vendor-style')
-@vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss'])
+    @vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss'])
 @endsection
 
 @section('vendor-script')
-@vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js'])
+    @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js'])
 @endsection
 
 @section('page-script')
-@vite(['resources/assets/js/charts-apex.js'])
+    @vite(['resources/assets/js/charts-apex.js'])
 @endsection
 
 @section('content')
-<div class="row">
+    <div class="row">
 
-  <!-- Line Area Chart -->
-  <div class="col-12 mb-6">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between">
-        <div>
-          <h5 class="card-title mb-0">Last updates</h5>
-          <p class="card-subtitle my-0">Commercial networks</p>
+        <!-- Line Chart -->
+        <div class="col-md-6 col-12 mb-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">Suhu (°C)</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="suhuChart"></canvas>
+                </div>
+            </div>
         </div>
-        <div class="dropdown">
-          <button type="button" class="btn dropdown-toggle px-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-calendar"></i></button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Today</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Yesterday</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 7 Days</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 30 Days</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Current Month</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last Month</a></li>
-          </ul>
+        <!-- /Line Chart -->
+
+        <!-- Line Chart -->
+        <div class="col-md-6 col-12 mb-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">pH (pH)</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="phChart"></canvas>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="card-body">
-        <div id="lineAreaChart"></div>
-      </div>
+        <!-- /Line Chart -->
+
+        <!-- Line Chart -->
+        <div class="col-md-6 col-12 mb-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">UV (mW/cm²)</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="uvChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- /Line Chart -->
+
+        <!-- Line Chart -->
+        <div class="col-md-6 col-12 mb-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">Tekanan Udara (kPa)</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="tekananUdaraChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- /Line Chart -->
+
+        <!-- Line Chart -->
+        <div class="col-md-6 col-12 mb-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">Kelembapan (RH)</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="kelembapanChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- /Line Chart -->
+
+        <!-- Line Chart -->
+        <div class="col-md-6 col-12 mb-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">O2 (mg/m³)</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="o2Chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- /Line Chart -->
+
+        <!-- Line Chart -->
+        <div class="col-md-6 col-12 mb-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">CO2 (mg/m³)</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="co2Chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- /Line Chart -->
+
+        @push('scripts')
+            <!-- Include Chart.js -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                function generateRandomData(numPoints) {
+                    return Array.from({
+                        length: numPoints
+                    }, () => Math.floor(Math.random() * 100));
+                }
+
+                function lineChart(id, labels, data, color) {
+                    const ctx = document.getElementById(id).getContext('2d');
+
+                    const chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '',
+                                data: data,
+                                borderColor: color,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            animation: {
+                                duration: 500,
+                                easing: 'linear'
+                            }
+                        }
+                    });
+                    setInterval(() => {
+                        chart.data.datasets[0].data = generateRandomData(labels.length);
+                        chart.update({
+                            duration: 500,
+                            easing: 'linear'
+                        });
+                    }, 1000);
+                }
+
+                const labels = ['01.01', '02.01', '03.01', '04.01', '05.01', '06.01', '07.01', '08.01', '09.01', '10.01'];
+
+                lineChart('suhuChart', labels, generateRandomData(7), 'rgba(255, 99, 132, 1)');
+                lineChart('phChart', labels, generateRandomData(5), 'rgba(54, 162, 235, 1)');
+                lineChart('uvChart', labels, generateRandomData(7), 'rgba(255, 206, 86, 1)');
+                lineChart('tekananUdaraChart', labels, generateRandomData(5), 'rgba(75, 192, 192, 1)');
+                lineChart('kelembapanChart', labels, generateRandomData(7), 'rgba(153, 102, 255, 1)');
+                lineChart('o2Chart', labels, generateRandomData(5), 'rgba(255, 159, 64, 1)');
+                lineChart('co2Chart', labels, generateRandomData(7), 'rgba(201, 203, 207, 1)');
+            </script>
+        @endpush
+
     </div>
-  </div>
-  <!-- /Line Area Chart -->
-
-  <!-- Bar Chart -->
-  <div class="col-12 mb-6">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-md-center align-items-start">
-        <h5 class="card-title mb-0">Data Science</h5>
-        <div class="dropdown">
-          <button type="button" class="btn dropdown-toggle p-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-calendar"></i></button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Today</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Yesterday</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 7 Days</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 30 Days</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Current Month</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last Month</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="barChart"></div>
-      </div>
-    </div>
-  </div>
-  <!-- /Bar Chart -->
-
-  <!-- Scatter Chart -->
-  <div class="col-12 mb-6">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="card-title mb-0">New Technologies Data</h5>
-        <div class="btn-group d-none d-sm-flex" role="group" aria-label="radio toggle button group">
-          <input type="radio" class="btn-check" name="btnradio" id="dailyRadio" checked>
-          <label class="btn btn-outline-secondary" for="dailyRadio">Daily</label>
-
-          <input type="radio" class="btn-check" name="btnradio" id="monthlyRadio">
-          <label class="btn btn-outline-secondary" for="monthlyRadio">Monthly</label>
-
-          <input type="radio" class="btn-check" name="btnradio" id="yearlyRadio">
-          <label class="btn btn-outline-secondary" for="yearlyRadio">Yearly</label>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="scatterChart"></div>
-      </div>
-    </div>
-  </div>
-  <!-- /Scatter Chart -->
-
-  <!-- Line Chart -->
-  <div class="col-12 mb-6">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between">
-        <div>
-          <h5 class="card-title mb-0">Balance</h5>
-          <p class="card-subtitle  my-0">Commercial networks & enterprises</p>
-        </div>
-        <div class="d-sm-flex d-none align-items-center">
-          <h5 class="mb-0 me-4">$ 100,000</h5>
-          <span class="badge bg-label-secondary">
-            <i class='ti ti-arrow-big-down ti-xs text-danger'></i>
-            <span class="align-middle">20%</span>
-          </span>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="lineChart"></div>
-      </div>
-    </div>
-  </div>
-  <!-- /Line Chart -->
-
-  <!-- Bar Chart -->
-  <div class="col-md-6 col-12 mb-6">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <div>
-          <p class="mb-1 mt-0 card-subtitle">Balance</p>
-          <h5 class="card-title mb-0">$74,382.72</h5>
-        </div>
-        <div class="dropdown">
-          <button type="button" class="btn dropdown-toggle px-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-calendar"></i></button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Today</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Yesterday</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 7 Days</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 30 Days</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Current Month</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last Month</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="horizontalBarChart"></div>
-      </div>
-    </div>
-  </div>
-  <!-- /Bar Chart -->
-
-  <!-- Candlestick Chart -->
-  <div class="col-md-6 col-12 mb-6">
-    <div class="card">
-      <div class="card-header d-flex align-items-center justify-content-between">
-        <div>
-          <h5 class="card-title mb-0">Stocks Prices</h5>
-          <p class="card-subtitle my-0">$50,863.98</p>
-        </div>
-        <div class="dropdown">
-          <button type="button" class="btn dropdown-toggle px-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-calendar"></i></button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Today</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Yesterday</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 7 Days</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 30 Days</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Current Month</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last Month</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="candleStickChart"></div>
-      </div>
-    </div>
-  </div>
-  <!-- /Candlestick Chart -->
-
-  <!-- Heat map Chart -->
-  <div class="col-md-6 col-12 mb-6">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="card-title mb-0">Daily Sales States</h5>
-        <div class="dropdown">
-          <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1" type="button" id="heatChartDd" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="ti ti-dots-vertical ti-md text-muted"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="heatChartDd">
-            <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-            <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-            <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="heatMapChart"></div>
-      </div>
-    </div>
-  </div>
-  <!-- /Heat map Chart -->
-
-  <!-- Radial bar Chart -->
-  <div class="col-md-6 col-12 mb-6">
-    <div class="card">
-      <div class="card-header d-flex align-items-center justify-content-between">
-        <h5 class="card-title mb-0">Statistics</h5>
-        <div class="dropdown">
-          <button type="button" class="btn dropdown-toggle p-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-calendar"></i></button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Today</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Yesterday</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 7 Days</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 30 Days</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Current Month</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last Month</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="radialBarChart"></div>
-      </div>
-    </div>
-  </div>
-  <!-- /Radial bar Chart -->
-
-  <!-- Radar Chart -->
-  <div class="col-md-6 col-12 mb-6 mb-md-0">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="card-title mb-0">Mobile Comparison</h5>
-        <div class="dropdown">
-          <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1" type="button" id="heatChartDd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="ti ti-dots-vertical ti-md text-muted"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="heatChartDd1">
-            <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-            <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-            <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="radarChart"></div>
-      </div>
-    </div>
-  </div>
-  <!-- /Radar Chart -->
-
-  <!-- Donut Chart -->
-  <div class="col-md-6 col-12">
-    <div class="card">
-      <div class="card-header d-flex align-items-center justify-content-between">
-        <div>
-          <h5 class="card-title mb-0">Expense Ratio</h5>
-          <p class="card-subtitle my-0">Spending on various categories</p>
-        </div>
-        <div class="dropdown d-none d-sm-flex">
-          <button type="button" class="btn dropdown-toggle px-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-calendar"></i></button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Today</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Yesterday</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 7 Days</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last 30 Days</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Current Month</a></li>
-            <li><a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">Last Month</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="donutChart"></div>
-      </div>
-    </div>
-  </div>
-  <!-- /Donut Chart -->
-
-</div>
 @endsection
