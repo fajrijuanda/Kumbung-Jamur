@@ -43,7 +43,7 @@ class Login extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             // Authentication passed
-            return redirect()->route('admin.dashboard.dashboard-admin')->with('success', 'Login berhasil! Selamat datang kembali.');
+            return redirect()->route('/charts/apex')->with('success', 'Login berhasil! Selamat datang kembali.');
         }
         // Authentication failed
         return back()->withErrors([
