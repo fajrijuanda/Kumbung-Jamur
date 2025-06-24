@@ -14,7 +14,7 @@ class Login extends Controller
     public function index()
     {
         if (Auth::check()) {
-            return redirect()->route('admin.dashboard.dashboard-admin');
+            return redirect('/charts/apex');
         }
 
         $pageConfigs = ['myLayout' => 'blank'];
@@ -43,7 +43,7 @@ class Login extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             // Authentication passed
-            return redirect()->route('/charts/apex')->with('success', 'Login berhasil! Selamat datang kembali.');
+            return redirect('/charts/apex')->with('success', 'Login berhasil! Selamat datang kembali.');
         }
         // Authentication failed
         return back()->withErrors([

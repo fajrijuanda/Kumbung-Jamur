@@ -436,7 +436,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 </a>
               </li>
 
-              @if (Auth::check() && Laravel\Jetstream\Jetstream::hasApiFeatures())
+              @if (Auth::check() && false)
                 <li>
                   <a class="dropdown-item" href="{{ route('api-tokens.index') }}">
                     <i class="ti ti-key ti-md me-3"></i><span class="align-middle">API Tokens</span>
@@ -452,7 +452,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 </a>
               </li>
 
-              @if (Auth::User() && Laravel\Jetstream\Jetstream::hasTeamFeatures())
+              @if (Auth::User() && false)
                 <li>
                   <div class="dropdown-divider my-1 mx-n2"></div>
                 </li>
@@ -467,7 +467,7 @@ $navbarDetached = ($navbarDetached ?? '');
                     <i class="ti ti-settings ti-md me-3"></i><span class="align-middle">Team Settings</span>
                   </a>
                 </li>
-                @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
+                @can('create', false)
                   <li>
                     <a class="dropdown-item" href="{{ route('teams.create') }}">
                       <i class="ti ti-user ti-md me-3"></i><span class="align-middle">Create New Team</span>
